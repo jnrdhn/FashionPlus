@@ -18,7 +18,7 @@ class PickleDataset(BaseDataset):
         self.dataroot = opt.dataroot
 
         ### Read in picke file
-        with open(os.path.join(opt.dataroot, '{}.p'.format(opt.phase)), 'rb') as readfile:
+        with open('FashionPlus/generation/datasets/demo/test.p', 'rb') as readfile:
             self.pickle_file = pickle.load(readfile)
 
         ### input A (label maps)

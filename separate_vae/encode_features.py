@@ -77,7 +77,7 @@ for i, data in enumerate(dataset):
         util.save_image(util.tensor2label(generated.data[0], opt.output_nc, normalize=True), os.path.join(img_dir, 'synthesized_label_%s.jpg' % (fname)))
 
 if demo:
-    save_name = os.path.join('results/Lab/demo/', '%s_shape_codes.p' % opt.phase)
+    save_name = os.path.join('FashionPlus/separate_vae/results/Lab/demo/', '%s_shape_codes.p' % opt.phase)
 else:
     save_name = os.path.join(img_dir, '%s_shape_codes.p' % opt.phase)
 with open(save_name, 'wb') as writefile:
