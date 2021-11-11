@@ -17,7 +17,7 @@ SHAPE_GEN_PATH=${ROOT_DIR}'/checkpoint/' # directory with cGAN weights
 TEXTURE_GEN_PATH=${ROOT_DIR}'/checkpoint/' # directory with VAE weights
 
 # Extract shape encodings
-Fashionplus/separate_vae/scripts/encode_shape_features_demo.sh \
+FashionPlus/separate_vae/scripts/encode_shape_features_demo.sh \
 	CLASS=${CLASS} \
 	LABEL_DIR=${LABEL_DIR} \
 	SHAPE_GEN_PATH=${SHAPE_GEN_PATH}

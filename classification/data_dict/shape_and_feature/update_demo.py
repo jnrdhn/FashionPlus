@@ -136,7 +136,7 @@ def set_dataset_parameters(classname):
                PART_NUM (int), number of distinct parts in the concatenated feature
     '''
     if classname == 'humanparsing':
-        with open('datasets/%s/garment_label_part_map.json' % classname, 'r') as readfile:
+        with open('FashionPlus/classification/data_dict/shape_and_feature/datasets/%s/garment_label_part_map.json' % classname, 'r') as readfile:
             garment_map = json.load(readfile)
         # top 4: 0
         # skirt 5: 1
@@ -365,7 +365,7 @@ def generate_segmentation_mask_per_iteration(shape_feature, updated_feature):
               updated_feature (list of InputFeature objects), classifier input feature after updating
     '''
     # Add generator path
-    parentPath = os.path.abspath("../../../separate_vae")
+    parentPath = os.path.abspath("FashionPlus/separate_vae")
     if parentPath not in sys.path:
         sys.path.insert(1, parentPath)
     # print(sys.path)
@@ -384,7 +384,7 @@ def generate_segmentation_mask_per_iteration(shape_feature, updated_feature):
                             np.expand_dims(feature.get_feature(swapped_partID, mode='shape_only'), axis=0)
         batch_shape_feature = np.vstack((batch_shape_feature, iter_shape_feature))
         filenames.append('_'.join(['%03d' % ((iter + 1) * argopt.display_freq), fname]))
-    with cd('../../../separate_vae'):
+    with cd('FashionPlus/separate_vae'):
         batch_generation_from_update(4, argopt.save_dir, filenames, batch_shape_feature, argopt.load_pretrain_shape_gen, argopt.classname)#, black=False)
     # Remove generator path
     if parentPath in sys.path:
@@ -397,7 +397,7 @@ def generate_segmentation_mask_final(shape_feature, updated_feature):
               updated_feature (list of InputFeature objects), classifier input feature after updating
     '''
     # Add generator path
-    parentPath = os.path.abspath("../../../separate_vae")
+    parentPath = os.path.abspath("FashionPlus/separate_vae")
     if parentPath not in sys.path:
         sys.path.insert(1, parentPath)
     from decode_masks import single_generation_from_update
@@ -407,12 +407,12 @@ def generate_segmentation_mask_final(shape_feature, updated_feature):
     batch_shape_feature[0, swapped_partID * SHAPE_FEAT_NUM: (swapped_partID+1) * SHAPE_FEAT_NUM] = \
                            np.expand_dims(feature.get_feature(swapped_partID, mode='shape_only'), axis=0)
     filename = '_'.join(['final', fname])
-    with cd('../../../separate_vae'):
+    with cd('FashionPlus/separate_vae'):
         single_generation_from_update(argopt.save_dir, filename, batch_shape_feature, argopt.load_pretrain_shape_gen, argopt.classname)#, black=False)
     # Generate reconstructed
     batch_shape_feature = copy.deepcopy(shape_feature) # Use original feature for reconstruction
     filename = '_'.join(['001', fname])
-    with cd('../../../separate_vae'):
+    with cd('FashionPlus/separate_vae'):
         single_generation_from_update(argopt.save_dir, filename, batch_shape_feature, argopt.load_pretrain_shape_gen, argopt.classname)#, black=False)
 
     # Remove generator path
@@ -425,7 +425,7 @@ def generate_texture_on_mask_per_iteration(outfit_feat_dict, updated_feature):
         Args: outfit_feat_dict (python dict), original texture feature in the format for cGAN to decode
               updated_feature (list of InputFeature objects), classifier input feature after updating
     '''
-    parentPath = os.path.abspath("../../../generation")
+    parentPath = os.path.abspath("FashionPlus/generation")
     if parentPath not in sys.path:
         sys.path.insert(1, parentPath)
     from decode_clothing_features import generation_from_decoded_mask
@@ -437,7 +437,7 @@ def generate_texture_on_mask_per_iteration(outfit_feat_dict, updated_feature):
             raise NotImplementedError
         else:
             iter_outfit_feat_dict[swapped_type] = np.expand_dims(feature.get_feature(swapped_partID, mode='texture_only'), axis=0)
-        with cd('../../../generation'): # WRITE A BATCH VERSION LATER
+        with cd('FashionPlus/generation'): # WRITE A BATCH VERSION LATER
             generation_from_decoded_mask('%03d' % ((iter + 1) * argopt.display_freq), argopt.save_dir, fname, iter_outfit_feat_dict, \
                                         argopt.load_pretrain_texture_gen, argopt.color_mode, argopt.netG, argopt.model_type, argopt.classname, argopt.texture_feat_num, original_mask=False, update=True, from_avg=True, remove_background=True)
     # Remove generator path
@@ -450,7 +450,7 @@ def generate_texture_on_mask_final(outfit_feat_dict, updated_feature):
         Args: outfit_feat_dict (python dict), original texture feature in the format for cGAN to decode
               updated_feature (list of InputFeature objects), classifier input feature after updating
     '''
-    parentPath = os.path.abspath("../../../generation")
+    parentPath = os.path.abspath("FashionPlus/generation")
     if parentPath not in sys.path:
         sys.path.insert(1, parentPath)
     from decode_clothing_features import generation_from_decoded_mask
@@ -462,12 +462,12 @@ def generate_texture_on_mask_final(outfit_feat_dict, updated_feature):
         raise NotImplementedError
     else:
         iter_outfit_feat_dict[swapped_type] = np.expand_dims(feature.get_feature(swapped_partID, mode='texture_only'), axis=0)
-    with cd('../../../generation'):
+    with cd('FashionPlus/generation'):
         generation_from_decoded_mask('final', argopt.save_dir, fname, iter_outfit_feat_dict, \
                                     argopt.load_pretrain_texture_gen, argopt.color_mode, argopt.netG, argopt.model_type, argopt.classname, argopt.texture_feat_num, original_mask=False, update=True, from_avg=True, remove_background=True)
     # Reconstruct original image before updating
     iter_outfit_feat_dict = copy.deepcopy(outfit_feat_dict)
-    with cd('../../../generation'):
+    with cd('FashionPlus/generation'):
         generation_from_decoded_mask('001', argopt.save_dir, fname, iter_outfit_feat_dict, \
                                     argopt.load_pretrain_texture_gen, argopt.color_mode, argopt.netG, argopt.model_type, argopt.classname, argopt.texture_feat_num, original_mask=False, update=True, from_avg=True, remove_background=True)
     # Remove generator path
@@ -582,7 +582,7 @@ SHAPE_FEAT_NUM = argopt.shape_feat_num
 TEXTURE_FEAT_NUM = argopt.texture_feat_num
 ############### Read in original features, dictionary of pieces in outfit ################
 part_type_dict, type_part_dict, PART_NUM = set_dataset_parameters(argopt.classname)
-with open(os.path.join(argopt.dataset_dir, 'demo_dict.json'), 'r') as readfile:
+with open('FashionPlus/classification/datasets/demo_dict.json', 'r') as readfile:
         outfit_dict = json.load(readfile)
 with open(argopt.texture_feat_file, 'rb') as readfile:
     piece_texture_feat_dict = pickle.load(readfile)
@@ -591,7 +591,7 @@ with open(argopt.shape_feat_file, 'rb') as readfile:
 
 ############## Read in trained classifier ##################
 # Add classifier path
-parentPath = os.path.abspath("../../")
+parentPath = os.path.abspath("FashionPlus/classification")
 if parentPath not in sys.path:
     sys.path.insert(0, parentPath)
 from model import load_network

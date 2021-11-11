@@ -14,7 +14,7 @@ MODEL='pix2pixHD'
 LAMBDA_KL=0.0001 # hyperparameter for VAE 0.0001
 DIVIDE_K=4 # hyperparameter for VAE 4
 TEXTURE_FEAT_NUM=8
-ROOT_DIR='/FashionPlus/' # absolute path for FashionPlus
+ROOT_DIR='FashionPlus' # absolute path for FashionPlus
 
 
 # Editing module options
@@ -51,12 +51,12 @@ case ${MODEL} in
     CLF_EPOCH=120
     DATASET_DIR='FashionPlus/datasets/'
     SAVE_DIR='results/'${COLOR_MODE}'/'${CLASS}'/'${UPDATE_TYPE}'/demo/'
-    TEXTURE_PATH=${ROOT_DIR}'generation/results/Lab/demo/test_features.p'
+    TEXTURE_PATH=${ROOT_DIR}'/generation/results/Lab/demo/test_features.p'
     TEXTURE_GEN_PATH=${ROOT_DIR}'/checkpoint/'
-    SAVE_IMGS_DIR=${ROOT_DIR}'generation/results/'${COLOR_MODE}'/'${CLASS}'/'${UPDATE_TYPE}'/demo'
-    SHAPE_PATH=${ROOT_DIR}'separate_vae/results/Lab/demo/test_shape_codes.p'
+    SAVE_IMGS_DIR=${ROOT_DIR}'/generation/results/'${COLOR_MODE}'/'${CLASS}'/'${UPDATE_TYPE}'/demo'
+    SHAPE_PATH=${ROOT_DIR}'/separate_vae/results/Lab/demo/test_shape_codes.p'
     SHAPE_GEN_PATH=${ROOT_DIR}'/checkpoint/'
-    SAVE_MASKS_DIR=${ROOT_DIR}'separate_vae/results/'${COLOR_MODE}'/'${CLASS}'/'${UPDATE_TYPE}'/demo'
+    SAVE_MASKS_DIR=${ROOT_DIR}'/separate_vae/results/'${COLOR_MODE}'/'${CLASS}'/'${UPDATE_TYPE}'/demo'
     CLASSIFIER_PATH='FashionPlus/checkpoint/m'${PARAM_M}'k'${PARAM_K}'/'
     ;;
   *)
@@ -72,7 +72,7 @@ esac
 
 
 ############### UPDATE AND GENERATE  ###############
-exec_options="python update_demo.py \
+exec_options="python FashionPlus/classification/data_dict/shape_and_feature/update_demo.py \
                      --update_fname ${UPDATE_FNAME} \
                      --update_type ${UPDATE_TYPE} \
                      --max_iter_hr ${MAXITER} \
@@ -115,8 +115,8 @@ eval ${exec_options}
 ############## POSTPROCESS ###############
 LABEL_DIR=${ROOT_DIR}/datasets/images/
 IMG_DIR=${ROOT_DIR}/datasets/labels/
-cd ${ROOT_DIR}/postprocess
-python process_face.py \
+
+python FashionPlus/postprocess/process_face.py \
         --fname ${ITER_HEADER}_${UPDATE_FNAME} \
         --orig_img_dir ${LABEL_DIR} \
 	--orig_mask_dir ${IMG_DIR} \
@@ -124,7 +124,7 @@ python process_face.py \
 	--gen_mask_dir ${SAVE_MASKS_DIR} \
 	--bbox_pickle_file ${ROOT_DIR}/generation/datasets/demo/test.p \
 	--result_dir ${ROOT_DIR}/classification/data_dict/shape_and_feature/results/demo/images/
-python process_face.py \
+python FashionPlus/postprocess/process_face.py \
         --fname 001_${UPDATE_FNAME} \
         --orig_img_dir ${LABEL_DIR} \
 	--orig_mask_dir ${IMG_DIR} \
