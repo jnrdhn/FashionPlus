@@ -13,7 +13,7 @@ import pickle
 import numpy as np
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 opt = TrainOptions().parse()
 opt.nThreads = 1
@@ -24,7 +24,7 @@ opt.instance_feat = True
 
 name = '%s_features' % opt.phase
 if opt.name == 'demo':
-	save_path = os.path.join('results/Lab/', opt.name)
+	save_path = os.path.join('FashionPlus/generation/results/Lab/', opt.name)
 else:
 	save_path = os.path.join(opt.checkpoints_dir, opt.name)
 

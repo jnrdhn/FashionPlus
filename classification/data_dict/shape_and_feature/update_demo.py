@@ -314,7 +314,7 @@ def compute_updated_feature(input_feature):
         ##### Backward #####
         loss.backward()
         if n_iter % argopt.display_freq == (argopt.display_freq-1):
-            print('Iteration: %d, loss: %f'%(n_iter+1, loss.data[0]))
+            print('Iteration: %d, loss: %f'%(n_iter+1, loss.data.item()))
             # toTensor covert float64 to float32, while float32 cannot be converted to tensor again
             updated_feature.append(InputFeature(SHAPE_FEAT_NUM, TEXTURE_FEAT_NUM, \
                                               PART_NUM, np.float64(opt_feat.data.cpu().numpy())))

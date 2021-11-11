@@ -57,7 +57,7 @@ case ${MODEL} in
     SHAPE_PATH=${ROOT_DIR}'/separate_vae/results/Lab/demo/test_shape_codes.p'
     SHAPE_GEN_PATH=${ROOT_DIR}'/checkpoint/'
     SAVE_MASKS_DIR=${ROOT_DIR}'/separate_vae/results/'${COLOR_MODE}'/'${CLASS}'/'${UPDATE_TYPE}'/demo'
-    CLASSIFIER_PATH='FashionPlus/checkpoint/m'${PARAM_M}'k'${PARAM_K}'/'
+    CLASSIFIER_PATH='FashionPlus/checkpoint/'
     ;;
   *)
     echo 'WRONG feature_dimension '${DFEAT}

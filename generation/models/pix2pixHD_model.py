@@ -420,7 +420,7 @@ class Pix2PixHDModel(BaseModel):
             idx = idx[num//2,:] # // integer divison
             val = np.zeros((1, feat_num+1))
             for k in range(feat_num):
-                val[0, k] = feat_map[idx[0], idx[1] + k, idx[2], idx[3]].data[0]
+                val[0, k] = feat_map[idx[0], idx[1] + k, idx[2], idx[3]].data.item()
             val[0, feat_num] = float(num) / (h * w // block_num)
             feature[label] = np.append(feature[label], val, axis=0)
         return feature
